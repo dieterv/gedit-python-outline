@@ -1,0 +1,9 @@
+[Gedit Plugin]
+Loader=python
+Module=pythonoutline
+IAge=2
+Name=Python outline
+Description=Python code structure outline
+Authors=Dieter Verfaillie
+Copyright=Copyright © 2007 Dieter Verfaillie
+Website=http://www.optionexplicit.be/
