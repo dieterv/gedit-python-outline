@@ -19,7 +19,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gtk, GObject, Gedit, GdkPixbuf
-from logilab.astng import builder
+try:
+    from logilab.astng import builder
+except ImportError:
+    builder = None
 
 DEBUG = False
 
@@ -82,9 +85,10 @@ class OutlineBox(Gtk.Grid):
         if not iter:
             return
         line_no = model.get_value(iter, 3)
-        model._document.goto_line(line_no)
-        model._view.scroll_to_cursor()
-        
+        if not line_no < 0:
+            model._document.goto_line(line_no)
+            model._view.scroll_to_cursor()
+
 
 class OutlineModel(Gtk.TreeStore):
     moduleIcon = Gtk.Window().render_icon(Gtk.STOCK_COPY, Gtk.IconSize.MENU)
@@ -97,13 +101,17 @@ class OutlineModel(Gtk.TreeStore):
     def __init__(self, view, document):
         self._view = view
         self._document = document
+
+        # icon, name, class_name, line_no, docstring
+        Gtk.TreeStore.__init__(self, GdkPixbuf.Pixbuf, str, str, int, str)
+
+        if not builder:
+            self.append(None, [self.errorIcon, 'logilab.astng missing or invalid', None, -1, ''])
+            return
         
         start, end = document.get_bounds()
         text = document.get_text(start, end, False)
         
-        # icon, name, class_name, line_no, docstring
-        Gtk.TreeStore.__init__(self, GdkPixbuf.Pixbuf, str, str, int, str)
-
         try:
             tree = builder.ASTNGBuilder().string_build(text)
         except Exception, e:
