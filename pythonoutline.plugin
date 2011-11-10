@@ -1,7 +1,7 @@
-[Gedit Plugin]
+[Plugin]
 Loader=python
 Module=pythonoutline
-IAge=2
+IAge=3
 Name=Python outline
 Description=Python code structure outline
 Authors=Dieter Verfaillie
