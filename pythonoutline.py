@@ -115,7 +115,7 @@ class OutlineModel(Gtk.TreeStore):
         try:
             tree = builder.ASTNGBuilder().string_build(text)
         except Exception, e:
-            self.append(None, [self.errorIcon, '%s: %s' % (e.__class__.__name__, e.msg), None, e.lineno-1, e.text])
+            self.append(None, [self.errorIcon, '%s\n\t%s' % (e.__class__.__name__, e.msg), None, e.lineno-1, e.text])
             return
 
         for n in tree.body:
